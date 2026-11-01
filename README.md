@@ -16,7 +16,7 @@ before waking.* 且沙箱内部无法唤醒自己（suspend 后整机冻结）�
 
 - **无状态幂等**：状态真值全部存在 InstaBox 机器对象（`state` / `runStartedAt` /
   `cooldownUntil`），任意一轮失败/重复执行都安全。
-- 每 5 分钟（`*/5 * * * *`，GitHub 实际触发可能有数分钟延迟）跑一轮
+- 每 20 分钟（`9,29,49 * * * *`，刻意错开 GitHub 最拥挤的 `*/5` 档位以保证触发可靠）跑一轮
   `keepalive.py`：running→wake 心跳（或到 6 小时阈值→主动换气）；
   suspended 且冷却已过→wake 唤醒；stopped→start。
 - 密钥存于仓库 Secret `INSTABOX_API_KEY`（scopes: `machines:read` + `machines:write`），

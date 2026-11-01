@@ -2,7 +2,10 @@ name: instabox-keepalive
 
 on:
   schedule:
-    - cron: "*/5 * * * *" # 每 5 分钟；GitHub 实际触发可能有数分钟延迟
+    # 每 20 分钟（9/29/49 分错峰）。刻意避开最拥挤的 */5 档位：
+    # GitHub 免费档定时任务高峰期会大幅延迟甚至丢弃，错峰档位可靠得多。
+    # 恢复延迟 ≤20 分钟完全够用（换气时点在运行满 360 分钟后，距 480 硬顶余量 2 小时）。
+    - cron: "9,29,49 * * * *"
   workflow_dispatch:
     inputs:
       refresh:
