@@ -14,7 +14,7 @@ permissions: {}
 
 concurrency:
   group: instabox-keepalive
-  cancel-in-progress: true
+  cancel-in-progress: false # 换气期间 cron 触发的运行排队等待，绝不取消进行中的换气
 
 jobs:
   keepalive:
