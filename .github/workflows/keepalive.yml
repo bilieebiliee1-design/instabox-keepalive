@@ -1,0 +1,32 @@
+name: instabox-keepalive
+
+on:
+  schedule:
+    - cron: "*/5 * * * *" # 每 5 分钟；GitHub 实际触发可能有数分钟延迟
+  workflow_dispatch:
+    inputs:
+      refresh:
+        description: "立即执行一次完整换气 (suspend→冷却→wake)"
+        type: boolean
+        default: false
+
+permissions: {}
+
+concurrency:
+  group: instabox-keepalive
+  cancel-in-progress: true
+
+jobs:
+  keepalive:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - name: Keepalive guard
+        env:
+          INSTABOX_API_KEY: ${{ secrets.INSTABOX_API_KEY }}
+          INSTABOX_API_URL: "https://api.instabox.sh"
+          INSTABOX_MACHINE: "bc"
+          INSTABOX_REFRESH_MINUTES: "360"
+          INSTABOX_REFRESH_NOW: ${{ github.event.inputs.refresh == 'true' && '1' || '0' }}
+        run: python3 keepalive.py
